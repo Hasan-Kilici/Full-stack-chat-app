@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gorilla Chat</title>
+</head>
+<body>
+  <h2>Odaya Katıl</h2>
+  <input id="username" placeholder="Adınız" />
+  <input id="room" placeholder="Oda adı" />
+  <button onclick="join()">Katıl</button>
+  <hr />
+  <div id="chat"></div>
+  <input id="message" placeholder="Mesaj" />
+  <button onclick="sendMessage()">Gönder</button>
+
+  <script>
+    let socket = null;
+
+    function join() {
+      const user = document.getElementById("username").value;
+      const room = document.getElementById("room").value;
+
+      socket = new WebSocket(
+        "ws://localhost:8080/ws",
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiY2FlMDM1NDMtNmM4Ni00OTkwLWJiOTQtMjE3MzhmYTE0MjYxIiwic2Vzc2lvbl9pZCI6IjhlOTUxNTljLWFlNmEtNDg1Zi1iZTcyLWJmYmRhZjE3YjVjZCIsImlzcyI6Imhhc2FuLWtpbGljaS9jaGF0IiwiZXhwIjoxNzg1MjMxNjQ4LCJuYmYiOjE3NTM2OTU2NDgsImlhdCI6MTc1MzY5NTY0OH0.9FpcZDx8NOxGw70voYwvl6WwrpBzxWAEeljT3zKE8F0"
+      );
+
+      socket.onopen = () => {
+        socket.send(JSON.stringify({ event: "join", user,  room}));
+      };
+
+      socket.onmessage = (e) => {
+        const msg = JSON.parse(e.data);
+        const div = document.createElement("div");
+        div.innerText = `[${msg.room}] ${msg.user}: ${msg.data}`;
+        document.getElementById("chat").appendChild(div);
+      };
+
+      socket.onerror = (e) => {
+        alert("WebSocket bağlantı hatası!");
+      };
+
+      socket.onclose = () => {
+        alert("Bağlantı kapandı.");
+      };
+    }
+
+    function sendMessage() {
+      if (!socket || socket.readyState !== WebSocket.OPEN) {
+        alert("Önce odaya katılmalısınız!");
+        return;
+      }
+      const user = document.getElementById("username").value;
+      const room = document.getElementById("room").value;
+      const data = document.getElementById("message").value;
+      socket.send(JSON.stringify({ event: "message", user, room, data }));
+    }
+  </script>
+</body>
+</html>
