@@ -1,7 +1,7 @@
 # Full Stack Chat App
 
 A simple chat application I built to improve my skills with Gorilla WebSocket.
-Technologies used: GoFiber, Gorilla WebSocket, GORM, PostgreSQL, and SvelteK
+Technologies used: GoFiber, Gorilla WebSocket, GORM, PostgreSQL, and SvelteKit
 
 ### 📸 Gallery
 ![Chat Example](./galery/chat.png)
