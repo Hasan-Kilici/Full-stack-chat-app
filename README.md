@@ -36,6 +36,7 @@ port="587"
 password="your-email-password"
 from=""
 ```
+> **Note**: Replace the placeholders (username, password, database, your-email-password, etc.) with your actual credentials.,
 
 **2.Start the Backend**
 ```bash
